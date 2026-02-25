@@ -100,9 +100,20 @@ def main():
                 avail = node_map[node_name]
                 if mapping["type"] == "index":
                     try:
-                        idx = min(max(0, int(param)), len(avail) - 1)
-                        final_val = avail[idx]
-                    except: final_val = avail[0]
+                        idx = int(param)
+                        if node_name == "GpuPwrLevel":
+                            # GpuPwrLevel uses a reversed index mapping
+                            # 0 is a special case that maps to the highest performance level on MTKPower hint values
+                            final_val = avail[0] if idx == 0 else avail[len(avail) - 1 - idx]
+                            if idx != 0:
+                                print(f"[INDEX] [{target_hint}] GpuPwrLevel: Transposed Index {param} to Value {final_val}")
+                        else:
+                            # Standard index for MemFreq (Direct mapping)
+                            idx_clamped = min(max(0, idx), len(avail) - 1)
+                            final_val = avail[idx_clamped]
+                            print(f"[INDEX] [{target_hint}] {node_name}: Mapped Index {param} to {final_val}")
+                    except:
+                        final_val = avail[0]
                 else:
                     final_val = avail[0] if param == "0" else find_closest_value(param, avail, node_name, target_hint)
 
