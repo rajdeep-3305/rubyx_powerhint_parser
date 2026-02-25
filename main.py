@@ -45,6 +45,8 @@ def main():
         "PERF_RES_CPUFREQ_CCI_FREQ":      {"node": "CciFreq", "type": "value"},
         "PERF_RES_DRAM_OPP_MIN":          {"node": "MemFreq", "type": "index"},
         "PERF_RES_GPU_FREQ_MIN":          {"node": "GpuPwrLevel", "type": "index"},
+        "PERF_RES_GPU_GED_TIMER_BASE_DVFS_MARGIN": {"node": "GpuBaseDvfsMargin", "type": "value"},
+        "PERF_RES_GPU_GED_LOADING_BASE_DVFS_STEP": {"node": "GpuBaseDvfsStep", "type": "value"},
         "PERF_RES_SCHED_UCLAMP_MIN_TA":   {"node": "UclampTAMin", "type": "value"},
         "PERF_RES_SCHED_PREFER_IDLE_TA":  {"node": "UclampTALatency", "type": "value"}
     }
