@@ -9,7 +9,7 @@ python3 main.py refs/powerscntbl.xml refs/powerhint.json
 
 Reference configurations
 ------------------------
-Those configurations are based uppon MT6886 platform ([Dimensity 7200 Pro / Ultra](https://www.mediatek.com/products/smartphones/mediatek-dimensity-7200) - [Dimensity 7350 Pro](https://www.mediatek.com/products/smartphones/mediatek-dimensity-7350))
+These configurations are based uppon MT6877 platform (MediaTek Dimensity 1080)
 
 [powerscntbl.xml](refs/powerscntbl.xml)
 
@@ -19,86 +19,80 @@ Those configurations are based uppon MT6886 platform ([Dimensity 7200 Pro / Ultr
 Example output
 --------------
 ```
-[ROUND] [LAUNCH] CPUEfficiencyClusterMinFreq: 3000000 -> 2000000
-[ROUND] [LAUNCH] CPUSuperClusterMinFreq: 3000000 -> 2800000
-[ROUND] [AUDIO_STREAMING_LOW_LATENCY] CPUEfficiencyClusterMinFreq: 1000000 -> 1050000
-[ROUND] [INTERACTION] CPUEfficiencyClusterMinFreq: 1075000 -> 1100000
-[ROUND] [INTERACTION] CPUSuperClusterMinFreq: 1162000 -> 1200000
-[ROUND] [INTERACTION] CPUEfficiencyClusterMaxFreq: 3000000 -> 2000000
-[ROUND] [INTERACTION] CPUSuperClusterMaxFreq: 3000000 -> 2800000
+[ROUND] [LAUNCH] CPULittleClusterMinFreq: 3000000 -> 2000000
+[ROUND] [LAUNCH] CPUBigClusterMinFreq: 3000000 -> 2600000
+[ROUND] [AUDIO_STREAMING_LOW_LATENCY] CPULittleClusterMinFreq: 1500000 -> 1503000
+[ROUND] [AUDIO_STREAMING_LOW_LATENCY] CPUBigClusterMinFreq: 1000000 -> 1040000
+[ROUND] [INTERACTION] CPULittleClusterMinFreq: 1075000 -> 1150000
+[ROUND] [INTERACTION] CPULittleClusterMaxFreq: 3000000 -> 2000000
+[ROUND] [INTERACTION] CPUBigClusterMaxFreq: 3000000 -> 2600000
 {
   "Actions": [
     {
       "PowerHint": "LAUNCH",
-      "Node": "CPUEfficiencyClusterMinFreq",
+      "Node": "CPULittleClusterMinFreq",
       "Duration": 0,
       "Value": "2000000"
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "CPUSuperClusterMinFreq",
+      "Node": "CPUBigClusterMinFreq",
       "Duration": 0,
-      "Value": "2800000"
+      "Value": "2600000"
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "MemFreq",
+      "Node": "DRAMOppMin",
       "Duration": 0,
-      "Value": "3200000000"
+      "Value": "1"
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "UclampTAMin",
+      "Node": "TAUclampMin",
       "Duration": 0,
       "Value": "100"
     },
     {
       "PowerHint": "AUDIO_STREAMING_LOW_LATENCY",
-      "Node": "CPUEfficiencyClusterMinFreq",
+      "Node": "CPULittleClusterMinFreq",
       "Duration": 0,
-      "Value": "1050000"
+      "Value": "1503000"
     },
     {
       "PowerHint": "AUDIO_STREAMING_LOW_LATENCY",
-      "Node": "CPUSuperClusterMinFreq",
+      "Node": "CPUBigClusterMinFreq",
       "Duration": 0,
-      "Value": "1000000"
+      "Value": "1040000"
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "CPUEfficiencyClusterMinFreq",
+      "Node": "CPULittleClusterMinFreq",
       "Duration": 0,
-      "Value": "1100000"
+      "Value": "1150000"
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "CPUSuperClusterMinFreq",
+      "Node": "CPUBigClusterMinFreq",
       "Duration": 0,
-      "Value": "1200000"
+      "Value": "1140000"
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "CPUEfficiencyClusterMaxFreq",
+      "Node": "CPULittleClusterMaxFreq",
       "Duration": 0,
       "Value": "2000000"
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "CPUSuperClusterMaxFreq",
+      "Node": "CPUBigClusterMaxFreq",
       "Duration": 0,
-      "Value": "2800000"
+      "Value": "2600000"
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "UclampTAMin",
+      "Node": "TAUclampMin",
       "Duration": 0,
       "Value": "40"
-    },
-    {
-      "PowerHint": "INTERACTION",
-      "Node": "UclampTALatency",
-      "Duration": 0,
-      "Value": "1"
     }
   ]
 }
