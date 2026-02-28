@@ -5,9 +5,11 @@ from pathlib import Path
 
 def find_closest_value(target_val, available_values, node_name, hint_name):
     try:
-        numeric_avail = sorted([int(v) for v in available_values if str(v).isdigit() and int(v) > 0])
+        # Fixed to allow negative numbers like -1 used in MaxFreq nodes
+        numeric_avail = sorted([int(v) for v in available_values if str(v).lstrip('-').isdigit()])
         target = int(target_val)
         if str(target_val) in [str(v) for v in available_values]: return str(target_val)
+        
         upscale_options = [v for v in numeric_avail if v >= target]
         result = min(upscale_options) if upscale_options else max(numeric_avail)
         print(f"[ROUND] [{hint_name}] {node_name}: {target_val} -> {result}")
@@ -35,20 +37,32 @@ def main():
         "MTKPOWER_HINT_GAME_MODE": "GAME"
     }
 
+    # Includes both string labels and hex code fallbacks to ensure nothing is missed
     MTK_MAP = {
-        "PERF_RES_CPUFREQ_MIN_CLUSTER_0": {"node": "CPUEfficiencyClusterMinFreq", "type": "value"},
-        "PERF_RES_CPUFREQ_MIN_CLUSTER_1": {"node": "CPUSuperClusterMinFreq", "type": "value"},
+        "PERF_RES_CPUFREQ_MIN_CLUSTER_0": {"node": "CPULittleClusterMinFreq", "type": "value"},
+        "0x40000000":                     {"node": "CPULittleClusterMinFreq", "type": "value"},
+        "PERF_RES_CPUFREQ_MAX_CLUSTER_0": {"node": "CPULittleClusterMaxFreq", "type": "value"},
+        "0x40000100":                     {"node": "CPULittleClusterMaxFreq", "type": "value"},
+        
+        "PERF_RES_CPUFREQ_MIN_CLUSTER_1": {"node": "CPUBigClusterMinFreq", "type": "value"},
+        "0x40400000":                     {"node": "CPUBigClusterMinFreq", "type": "value"},
+        "PERF_RES_CPUFREQ_MAX_CLUSTER_1": {"node": "CPUBigClusterMaxFreq", "type": "value"},
+        "0x40400100":                     {"node": "CPUBigClusterMaxFreq", "type": "value"},
+        
+        "PERF_RES_SCHED_UCLAMP_MIN_TA":   {"node": "TAUclampMin", "type": "value"},
+        "0x42c10000":                     {"node": "TAUclampMin", "type": "value"},
+        "PERF_RES_SCHED_PREFER_IDLE_TA":  {"node": "SchedBoost", "type": "value"},
+        "0x42c30000":                     {"node": "SchedBoost", "type": "value"},
+        
+        "PERF_RES_DRAM_OPP_MIN":          {"node": "DRAMOppMin", "type": "value"},
+        "0x41800000":                     {"node": "DRAMOppMin", "type": "value"},
+
         "PERF_RES_CPUFREQ_MIN_CLUSTER_2": {"node": "CPUUltraClusterMinFreq", "type": "value"},
-        "PERF_RES_CPUFREQ_MAX_CLUSTER_0": {"node": "CPUEfficiencyClusterMaxFreq", "type": "value"},
-        "PERF_RES_CPUFREQ_MAX_CLUSTER_1": {"node": "CPUSuperClusterMaxFreq", "type": "value"},
         "PERF_RES_CPUFREQ_MAX_CLUSTER_2": {"node": "CPUUltraClusterMaxFreq", "type": "value"},
         "PERF_RES_CPUFREQ_CCI_FREQ":      {"node": "CciFreq", "type": "value"},
-        "PERF_RES_DRAM_OPP_MIN":          {"node": "MemFreq", "type": "index"},
         "PERF_RES_GPU_FREQ_MIN":          {"node": "GpuPwrLevel", "type": "index"},
         "PERF_RES_GPU_GED_TIMER_BASE_DVFS_MARGIN": {"node": "GpuBaseDvfsMargin", "type": "value"},
-        "PERF_RES_GPU_GED_LOADING_BASE_DVFS_STEP": {"node": "GpuBaseDvfsStep", "type": "value"},
-        "PERF_RES_SCHED_UCLAMP_MIN_TA":   {"node": "UclampTAMin", "type": "value"},
-        "PERF_RES_SCHED_PREFER_IDLE_TA":  {"node": "UclampTALatency", "type": "value"}
+        "PERF_RES_GPU_GED_LOADING_BASE_DVFS_STEP": {"node": "GpuBaseDvfsStep", "type": "value"}
     }
 
     try:
@@ -102,13 +116,10 @@ def main():
                     try:
                         idx = int(param)
                         if node_name == "GpuPwrLevel":
-                            # GpuPwrLevel uses a reversed index mapping
-                            # 0 is a special case that maps to the highest performance level on MTKPower hint values
                             final_val = avail[0] if idx == 0 else avail[len(avail) - 1 - idx]
                             if idx != 0:
                                 print(f"[INDEX] [{target_hint}] GpuPwrLevel: Transposed Index {param} to Value {final_val}")
                         else:
-                            # Standard index for MemFreq (Direct mapping)
                             idx_clamped = min(max(0, idx), len(avail) - 1)
                             final_val = avail[idx_clamped]
                             print(f"[INDEX] [{target_hint}] {node_name}: Mapped Index {param} to {final_val}")
